@@ -18,6 +18,9 @@
             /* الألوان الأساسية */
             --accent: #ff0040; /* أحمر نيون */
             --accent-glow: rgba(255, 0, 64, 0.3);
+            --accent-green: #00ff88; /* أخضر للبحث */
+            --accent-blue: #0088ff; /* أزرق للنماذج */
+            --accent-gold: #FFD700; /* ذهبي للبرو */
             --bg-main: #050505;
             --bg-card: #141414;
             --bg-card-hover: #1a1a1a;
@@ -27,8 +30,8 @@
             --code-bg: #1e1e1e;
             
             /* قياسات */
-            --header-h: 65px;
-            --radius-lg: 18px;
+            --header-h: 60px;
+            --radius-lg: 16px;
             --radius-sm: 8px;
         }
 
@@ -48,7 +51,7 @@
         }
 
         /* شريط التمرير المخصص */
-        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
@@ -56,44 +59,117 @@
         /* --- الهيدر (الشريط العلوي) --- */
         .app-header {
             height: var(--header-h);
-            background: rgba(5, 5, 5, 0.85);
+            background: rgba(5, 5, 5, 0.95);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border-color);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 15px;
+            padding: 0 12px;
             z-index: 50;
+            position: relative;
         }
 
         .logo-area {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             font-weight: 800;
-            font-size: 1.3rem;
-            letter-spacing: 0.5px;
+            font-size: 1.1rem;
+            letter-spacing: 0.3px;
             color: var(--text-primary);
+            flex-shrink: 0;
         }
 
         .logo-icon {
             color: var(--accent);
-            filter: drop-shadow(0 0 8px var(--accent));
+            filter: drop-shadow(0 0 6px var(--accent));
             animation: pulse-red 3s infinite;
+            font-size: 1.2rem;
         }
 
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* زر البرو */
+        .pro-badge {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 140, 0, 0.15));
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            color: var(--accent-gold);
+            padding: 6px 10px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+            animation: pulse-gold 2s infinite;
+        }
+
+        .pro-badge:hover {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.25), rgba(255, 140, 0, 0.25));
+            transform: translateY(-1px);
+        }
+
+        .pro-badge.pro-active {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 140, 0, 0.3));
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+            animation: pulse-gold-active 1.5s infinite;
+        }
+
+        @keyframes pulse-gold {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes pulse-gold-active {
+            0%, 100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.3); }
+            50% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); }
+        }
+
+        /* شارة النموذج في الهيدر */
+        .model-badge {
+            background: rgba(0, 136, 255, 0.15);
+            border: 1px solid rgba(0, 136, 255, 0.3);
+            color: var(--accent-blue);
+            padding: 6px 10px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            height: 36px;
+            flex-shrink: 0;
+        }
+
+        .model-badge.v3 {
+            background: rgba(0, 255, 136, 0.15);
+            border-color: rgba(0, 255, 136, 0.3);
+            color: var(--accent-green);
+        }
+
+        /* أزرار الهيدر */
         .header-controls button {
             background: transparent;
             border: 1px solid transparent;
             color: var(--text-secondary);
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
             cursor: pointer;
             transition: all 0.2s;
-            font-size: 1.1rem;
-            margin-left: 5px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
 
         .header-controls button:hover, .header-controls button.active {
@@ -102,19 +178,178 @@
             border-color: rgba(255, 255, 255, 0.1);
         }
 
+        .header-controls button.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .header-controls button.disabled:hover {
+            background: transparent;
+            color: var(--text-secondary);
+            border-color: transparent;
+        }
+
+        /* شارة البحث */
+        .web-search-badge {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            color: var(--accent-green);
+            padding: 5px 8px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s;
+            cursor: pointer;
+            height: 36px;
+            flex-shrink: 0;
+        }
+
+        .web-search-badge:hover {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: var(--accent-green);
+        }
+
+        .web-search-badge.active {
+            background: rgba(0, 255, 136, 0.25);
+            color: #fff;
+            box-shadow: 0 0 12px rgba(0, 255, 136, 0.2);
+        }
+
+        .web-search-badge.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        /* --- نافذة تفعيل البرو --- */
+        .pro-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fade-in 0.3s;
+        }
+
+        .pro-modal.active {
+            display: flex;
+        }
+
+        .pro-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            padding: 25px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        .pro-icon {
+            font-size: 3rem;
+            color: var(--accent-gold);
+            margin-bottom: 15px;
+            animation: pulse-gold 2s infinite;
+        }
+
+        .pro-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--accent-gold);
+            margin-bottom: 10px;
+        }
+
+        .pro-features {
+            text-align: right;
+            margin: 20px 0;
+            padding: 0 10px;
+        }
+
+        .pro-feature {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+        }
+
+        .pro-feature i {
+            color: var(--accent-gold);
+        }
+
+        .pro-input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            margin: 15px 0;
+            text-align: center;
+            letter-spacing: 2px;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .pro-input:focus {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2);
+            outline: none;
+        }
+
+        .pro-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #FFD700, #FF8C00);
+            border: none;
+            border-radius: 10px;
+            color: #000;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .pro-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3);
+        }
+
+        .pro-close {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
         /* --- منطقة المحادثة --- */
         .chat-container {
             flex: 1;
             overflow-y: auto;
-            padding: 15px 10px;
+            padding: 12px 8px;
             scroll-behavior: smooth;
             background: radial-gradient(circle at 50% 30%, rgba(255, 0, 64, 0.03), transparent 60%);
         }
 
         .message-wrapper {
             display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 10px;
+            margin-bottom: 16px;
             animation: slide-up 0.3s ease-out;
             width: 100%;
         }
@@ -124,14 +359,14 @@
         }
 
         .avatar {
-            width: 38px;
-            height: 38px;
-            border-radius: 10px;
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            font-size: 1rem;
+            font-size: 0.9rem;
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             margin-top: 5px;
@@ -139,7 +374,7 @@
 
         .message-wrapper.bot .avatar { 
             color: var(--accent); 
-            box-shadow: 0 0 15px rgba(255,0,64,0.1); 
+            box-shadow: 0 0 12px rgba(255,0,64,0.1); 
         }
 
         .message-wrapper.user .avatar { 
@@ -148,16 +383,16 @@
         }
 
         .bubble {
-            max-width: 92%;
-            padding: 14px 18px;
-            border-radius: 16px;
-            line-height: 1.7;
-            font-size: 0.95rem;
+            max-width: 94%;
+            padding: 12px 15px;
+            border-radius: 14px;
+            line-height: 1.65;
+            font-size: 0.92rem;
             position: relative;
             word-wrap: break-word;
             text-align: right;
             word-spacing: -0.5px;
-            letter-spacing: 0.2px;
+            letter-spacing: 0.1px;
         }
 
         .message-wrapper.bot .bubble {
@@ -173,158 +408,57 @@
             background: linear-gradient(135deg, #ff0040, #b3002d);
             color: white;
             border-top-left-radius: 4px;
-            box-shadow: 0 8px 20px rgba(255, 0, 64, 0.25);
+            box-shadow: 0 6px 16px rgba(255, 0, 64, 0.25);
             margin-right: 5px;
             margin-left: 0;
         }
 
-        /* تحسين تنسيق النص داخل الفقاعات */
-        .bubble p {
-            margin-bottom: 12px;
-            text-align: justify;
-            text-justify: inter-word;
-            hyphens: auto;
-        }
-
-        .bubble p:last-child {
-            margin-bottom: 0;
-        }
-
-        .bubble ul, .bubble ol {
-            margin: 12px 20px;
-            padding-right: 15px;
-            text-align: right;
-        }
-
-        .bubble li {
-            margin-bottom: 8px;
-        }
-
-        .bubble li:last-child {
-            margin-bottom: 0;
-        }
-
-        .bubble strong { 
-            color: var(--accent); 
-            font-weight: 700;
-        }
-
-        .bubble em {
-            font-style: italic;
-            color: #d0d0d0;
-        }
-
-        /* --- تنسيق الأكواد البرمجية --- */
-        .code-container {
-            margin: 12px 0;
-            background: #161618;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-        }
-
-        .code-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        /* تنبيه الميزات المحجوبة */
+        .feature-locked {
+            background: rgba(255, 0, 64, 0.1);
+            border: 1px solid rgba(255, 0, 64, 0.3);
+            color: #ff8ca3;
             padding: 8px 12px;
-            background: #202022;
-            border-bottom: 1px solid #333;
-            font-family: 'Fira Code', monospace;
-            font-size: 0.75rem;
-            color: #888;
+            border-radius: 10px;
+            margin: 10px 0;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: pulse-red 1.5s infinite;
         }
 
-        .code-lang {
-            font-weight: 600;
+        .feature-locked i {
             color: var(--accent);
-            text-transform: uppercase;
         }
 
-        .copy-btn {
-            background: transparent;
+        .unlock-btn {
+            background: linear-gradient(135deg, #FFD700, #FF8C00);
             border: none;
-            color: #aaa;
-            cursor: pointer;
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            border-radius: 6px;
+            color: #000;
             padding: 4px 8px;
-            border-radius: 6px;
-            transition: 0.2s;
-        }
-
-        .copy-btn:hover { 
-            background: rgba(255,255,255,0.1); 
-            color: white; 
-        }
-
-        pre { 
-            margin: 0 !important; 
-            padding: 12px !important; 
-            overflow-x: auto; 
-        }
-
-        code { 
-            font-family: 'Fira Code', monospace; 
-            font-size: 0.85rem; 
-            line-height: 1.4;
-        }
-
-        /* --- زر نسخ الإجابة كاملة --- */
-        .full-copy-btn {
-            position: absolute;
-            left: 12px;
-            top: 12px;
-            background: rgba(255, 0, 64, 0.15);
-            border: 1px solid rgba(255, 0, 64, 0.4);
-            color: #ff6680;
-            padding: 5px 10px;
-            border-radius: 6px;
             font-size: 0.75rem;
+            font-weight: 600;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            opacity: 0;
-            transition: all 0.3s;
-            backdrop-filter: blur(5px);
-            z-index: 5;
-        }
-
-        .message-wrapper.bot .bubble:hover .full-copy-btn {
-            opacity: 1;
-        }
-
-        .full-copy-btn:hover {
-            background: rgba(255, 0, 64, 0.25);
-            color: #ff3360;
-            transform: translateY(-1px);
-        }
-
-        .full-copy-btn.copied {
-            background: rgba(0, 255, 136, 0.15);
-            border-color: rgba(0, 255, 136, 0.4);
-            color: #00ff88;
+            margin-right: auto;
         }
 
         /* --- منطقة الإدخال --- */
         .input-area {
-            background: rgba(5, 5, 5, 0.9);
+            background: rgba(5, 5, 5, 0.95);
             backdrop-filter: blur(10px);
             border-top: 1px solid var(--border-color);
-            padding: 12px 15px;
+            padding: 10px 12px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
             position: relative;
         }
 
         .file-chips {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             overflow-x: auto;
             padding-bottom: 5px;
             display: none;
@@ -334,23 +468,23 @@
             background: rgba(255, 0, 64, 0.1);
             border: 1px solid rgba(255, 0, 64, 0.3);
             color: #ff8ca3;
-            padding: 4px 10px;
-            border-radius: 18px;
-            font-size: 0.8rem;
+            padding: 3px 8px;
+            border-radius: 16px;
+            font-size: 0.75rem;
             white-space: nowrap;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
         }
 
         .input-row {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 5px 5px 5px 12px;
+            border-radius: 18px;
+            padding: 4px 4px 4px 10px;
             transition: 0.3s;
         }
 
@@ -364,49 +498,65 @@
             background: transparent;
             border: none;
             color: #fff;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-family: inherit;
             resize: none;
-            height: 22px;
-            max-height: 100px;
-            line-height: 22px;
-            padding: 8px 0;
+            height: 20px;
+            max-height: 80px;
+            line-height: 20px;
+            padding: 6px 0;
         }
 
+        /* أزرار الإدخال */
         .action-icon {
             color: var(--text-secondary);
-            font-size: 1.05rem;
+            font-size: 0.95rem;
             cursor: pointer;
-            padding: 8px;
+            padding: 6px;
             transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
         }
 
         .action-icon:hover { 
+            background: rgba(255, 255, 255, 0.05);
             color: var(--accent); 
         }
 
+        .action-icon.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .action-icon.disabled:hover {
+            background: transparent;
+            color: var(--text-secondary);
+        }
+
+        /* زر الإرسال */
         .send-btn {
-            width: 42px;
-            height: 42px;
+            width: 38px;
+            height: 38px;
             background: var(--accent);
             border: none;
             border-radius: 50%;
             color: white;
-            font-size: 1rem;
+            font-size: 0.9rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 4px 12px rgba(255, 0, 64, 0.3);
+            box-shadow: 0 4px 10px rgba(255, 0, 64, 0.3);
+            flex-shrink: 0;
         }
 
         .send-btn:hover { 
             transform: scale(1.05); 
-        }
-
-        .send-btn:active { 
-            transform: scale(0.95); 
         }
 
         .send-btn:disabled { 
@@ -416,57 +566,106 @@
             cursor: not-allowed; 
         }
 
-        /* --- التنبيهات (Toasts) --- */
+        /* التنبيهات */
         .toast-container {
             position: fixed;
-            bottom: 90px;
+            bottom: 80px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
             pointer-events: none;
+            width: 90%;
+            max-width: 300px;
         }
 
         .toast {
             background: rgba(20, 20, 20, 0.95);
             border: 1px solid var(--border-color);
             color: white;
-            padding: 8px 16px;
-            border-radius: 25px;
-            font-size: 0.85rem;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
             display: flex;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
             animation: toast-in 0.3s forwards, toast-out 0.3s forwards 2.5s;
             backdrop-filter: blur(5px);
         }
 
-        .toast i { 
-            color: var(--accent); 
+        /* شريط الحالة في أسفل الهيدر */
+        .status-bar {
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(90deg, 
+                rgba(255, 0, 64, 0.1) 0%, 
+                rgba(0, 136, 255, 0.1) 50%, 
+                rgba(0, 255, 136, 0.1) 100%);
+            border-bottom: 1px solid var(--border-color);
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            gap: 15px;
+            padding: 0 15px;
+            z-index: 49;
+            transition: all 0.3s;
+            opacity: 0;
+            transform: translateY(-10px);
         }
+
+        .status-bar.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--text-secondary);
+        }
+
+        .status-item i {
+            font-size: 0.7rem;
+        }
+
+        .status-item.model { color: var(--accent-blue); }
+        .status-item.model.v3 { color: var(--accent-green); }
+        .status-item.pro { color: var(--accent-gold); }
+        .status-item.deep { color: var(--accent); }
+        .status-item.search { color: var(--accent-green); }
 
         /* الرسوم المتحركة */
         @keyframes pulse-red { 
-            0%,100%{filter:drop-shadow(0 0 5px var(--accent));} 
-            50%{filter:drop-shadow(0 0 15px var(--accent));} 
+            0%,100%{filter:drop-shadow(0 0 4px var(--accent));} 
+            50%{filter:drop-shadow(0 0 10px var(--accent));} 
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         @keyframes slide-up { 
-            from { opacity: 0; transform: translateY(20px); } 
+            from { opacity: 0; transform: translateY(15px); } 
             to { opacity: 1; transform: translateY(0); } 
         }
 
         @keyframes toast-in { 
-            from { opacity: 0; transform: translateY(20px); } 
+            from { opacity: 0; transform: translateY(15px); } 
             to { opacity: 1; transform: translateY(0); } 
         }
 
         @keyframes toast-out { 
             from { opacity: 1; transform: translateY(0); } 
-            to { opacity: 0; transform: translateY(-20px); } 
+            to { opacity: 0; transform: translateY(-15px); } 
         }
 
         /* شريط التفكير العميق */
@@ -478,8 +677,8 @@
             background: linear-gradient(90deg, rgba(255,0,64,0.1), transparent);
             border-bottom: 1px solid var(--accent);
             color: var(--accent);
-            font-size: 0.7rem;
-            padding: 3px 15px;
+            font-size: 0.65rem;
+            padding: 3px 12px;
             transform: translateY(-100%);
             transition: 0.3s;
             z-index: -1;
@@ -491,18 +690,18 @@
             opacity: 1; 
         }
 
-        /* القائمة الجانبية */
+        /* القوائم المنبثقة */
         .dropdown-menu {
             position: absolute;
-            top: 65px;
-            left: 15px;
+            top: 60px;
+            right: 12px;
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 10px;
             width: 180px;
             display: none;
             flex-direction: column;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
             z-index: 100;
         }
 
@@ -523,7 +722,7 @@
             gap: 8px;
             transition: 0.2s;
             font-family: inherit;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         .dropdown-item:hover { 
@@ -531,62 +730,117 @@
             color: white; 
         }
 
-        .dropdown-item.danger { 
-            color: #ff4d4d; 
+        /* قائمة النماذج */
+        .model-dropdown {
+            position: absolute;
+            top: 60px;
+            right: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            width: 200px;
+            display: none;
+            flex-direction: column;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            z-index: 100;
         }
 
-        /* مؤشر الكتابة */
-        .typing-dots span {
-            display: inline-block; 
-            width: 6px; 
-            height: 6px; 
-            background: #888; 
-            border-radius: 50%; 
-            animation: bounce 1.4s infinite ease-in-out; 
-            margin: 0 2px;
+        .model-dropdown.show { 
+            display: flex; 
+            animation: slide-up 0.2s; 
         }
 
-        .typing-dots span:nth-child(1){animation-delay:-0.32s}
-        .typing-dots span:nth-child(2){animation-delay:-0.16s}
-        @keyframes bounce {0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}
+        .model-option {
+            padding: 12px 15px;
+            color: #ccc;
+            border: none;
+            background: transparent;
+            text-align: right;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: 0.2s;
+            font-family: inherit;
+            font-size: 0.85rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .model-option:last-child {
+            border-bottom: none;
+        }
+
+        .model-option:hover { 
+            background: rgba(0, 136, 255, 0.1); 
+            color: white; 
+        }
+
+        .model-option.active {
+            background: rgba(0, 136, 255, 0.15);
+            color: var(--accent-blue);
+        }
+
+        .model-option.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .model-option.disabled:hover {
+            background: rgba(255, 255, 255, 0.02);
+            color: #ccc;
+        }
+
+        .pro-tag {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 140, 0, 0.15));
+            color: var(--accent-gold);
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-right: 8px;
+        }
 
         /* تحسينات للهواتف */
-        @media (max-width: 768px) {
-            .chat-container {
-                padding: 12px 8px;
+        @media (max-width: 480px) {
+            .logo-area span {
+                display: none;
             }
             
-            .message-wrapper {
-                gap: 10px;
-                margin-bottom: 16px;
+            .web-search-badge span {
+                display: none;
             }
             
-            .avatar {
-                width: 36px;
-                height: 36px;
-                font-size: 0.9rem;
+            .pro-badge span {
+                display: none;
             }
             
-            .bubble {
-                max-width: 94%;
-                padding: 12px 15px;
-                font-size: 0.92rem;
-                line-height: 1.65;
+            .model-badge span {
+                display: none;
             }
             
-            .app-header {
-                padding: 0 12px;
+            .status-bar {
+                font-size: 0.6rem;
+                gap: 8px;
+                padding: 0 8px;
             }
             
-            .input-area {
-                padding: 10px 12px;
+            .status-item span {
+                display: none;
+            }
+        }
+
+        @media (max-width: 350px) {
+            .header-controls {
+                gap: 4px;
             }
             
-            .full-copy-btn {
-                font-size: 0.7rem;
-                padding: 4px 8px;
-                left: 10px;
-                top: 10px;
+            .model-badge, .web-search-badge, .pro-badge {
+                padding: 4px 6px;
+            }
+            
+            .status-bar {
+                font-size: 0.55rem;
+                gap: 5px;
             }
         }
 
@@ -600,20 +854,133 @@
             <i class="fas fa-spider logo-icon"></i>
             <span>WormGPT</span>
         </div>
+        
+        <!-- شارة النموذج في الهيدر -->
+        <div class="model-badge" id="modelBadge">
+            <i class="fas fa-robot"></i>
+            <span>V1</span>
+        </div>
+        
         <div class="header-controls">
+            <!-- زر البرو -->
+            <div class="pro-badge" id="proBadge">
+                <i class="fas fa-crown"></i>
+                <span>Pro</span>
+            </div>
+            
+            <!-- زر البحث على الويب -->
+            <div class="web-search-badge" id="webSearchBtn">
+                <i class="fas fa-search"></i>
+                <span>بحث</span>
+            </div>
+            
+            <!-- التفكير العميق -->
             <button id="deepThinkBtn" title="التفكير العميق"><i class="fas fa-brain"></i></button>
+            
+            <!-- القائمة الرئيسية -->
             <button id="menuBtn"><i class="fas fa-bars"></i></button>
         </div>
-        <div class="deep-banner" id="deepBanner">
-            <i class="fas fa-bolt"></i> وضع التفكير العميق مفعل
+        
+        <!-- شريط الحالة -->
+        <div class="status-bar" id="statusBar">
+            <div class="status-item model" id="statusModel">
+                <i class="fas fa-robot"></i>
+                <span>النموذج: V1</span>
+            </div>
+            <div class="status-item pro" id="statusPro">
+                <i class="fas fa-crown"></i>
+                <span>مجاني</span>
+            </div>
+            <div class="status-item deep" id="statusDeep" style="display: none;">
+                <i class="fas fa-brain"></i>
+                <span>تفكير عميق</span>
+            </div>
+            <div class="status-item search" id="statusSearch" style="display: none;">
+                <i class="fas fa-search"></i>
+                <span>بحث ويب</span>
+            </div>
         </div>
     </header>
 
+    <!-- نافذة تفعيل البرو -->
+    <div class="pro-modal" id="proModal">
+        <div class="pro-card">
+            <button class="pro-close" id="proClose">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="pro-icon">
+                <i class="fas fa-crown"></i>
+            </div>
+            
+            <div class="pro-title">ترقية إلى WormGPT Pro</div>
+            
+            <div class="pro-features">
+                <div class="pro-feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>الوصول إلى WormGPT V3 المتقدم</span>
+                </div>
+                <div class="pro-feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>وضع التفكير العميق (Deep Thinking)</span>
+                </div>
+                <div class="pro-feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>رفع الملفات بجميع الأنواع</span>
+                </div>
+                <div class="pro-feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>البحث على الويب المتقدم</span>
+                </div>
+            </div>
+            
+            <input type="text" class="pro-input" id="proKeyInput" 
+                   placeholder="أدخل مفتاح الترخيص Pro" 
+                   maxlength="20">
+            
+            <button class="pro-btn" id="activateProBtn">
+                <i class="fas fa-key"></i> تفعيل Pro
+            </button>
+            
+            <div style="margin-top: 15px; font-size: 0.8rem; color: #888;">
+                مفاتيح تجريبية: WORMGPT-PRO-2024-001 إلى 005
+            </div>
+        </div>
+    </div>
+
+    <!-- قائمة اختيار النموذج -->
+    <div class="model-dropdown" id="modelDropdown">
+        <div class="model-option active" data-model="dolphin-3.0-mistral-24b-1dot1" data-version="V1">
+            <div>
+                <div>WormGPT V1</div>
+                <div style="font-size: 0.7rem; color: #888; margin-top: 3px;">مجاني - سرعة عالية ودقة متوسطة</div>
+            </div>
+            <i class="fas fa-check check-icon"></i>
+        </div>
+        <div class="model-option" id="v3Option" data-model="zai-org-glm-4.6" data-version="V3">
+            <div>
+                <div>
+                    <span class="pro-tag">PRO</span>
+                    WormGPT V3
+                </div>
+                <div style="font-size: 0.7rem; color: #888; margin-top: 3px;">للمستخدمين المميزين فقط</div>
+            </div>
+            <i class="fas fa-lock" id="v3LockIcon"></i>
+        </div>
+    </div>
+
     <!-- قائمة الخيارات -->
     <div class="dropdown-menu" id="mainMenu">
-        <button class="dropdown-item" onclick="app.exportChat()"><i class="fas fa-file-export"></i> تصدير المحادثة</button>
+        <button class="dropdown-item" onclick="app.exportChat()">
+            <i class="fas fa-file-export"></i> تصدير المحادثة
+        </button>
+        <button class="dropdown-item" onclick="app.switchModel()">
+            <i class="fas fa-exchange-alt"></i> تبديل النموذج
+        </button>
         <div style="height:1px; background:#333; margin: 5px 0;"></div>
-        <button class="dropdown-item danger" onclick="app.clearChat()"><i class="fas fa-trash-alt"></i> مسح السجل</button>
+        <button class="dropdown-item" onclick="app.clearChat()">
+            <i class="fas fa-trash-alt"></i> مسح السجل
+        </button>
     </div>
 
     <!-- منطقة المحادثة -->
@@ -622,11 +989,19 @@
         <div class="message-wrapper bot">
             <div class="avatar"><i class="fas fa-robot"></i></div>
             <div class="bubble">
-                <button class="full-copy-btn" onclick="app.copyFullMessage(this)" title="نسخ الإجابة كاملة">
-                    <i class="far fa-copy"></i> نسخ الكل
-                </button>
                 <p>مرحباً! أنا <strong>WormGPT Ultimate</strong>.</p>
-                <p>أنا هنا لمساعدتك في كتابة الأكواد، تحليل الملفات، والإجابة بدقة. جرب أن تطلب مني كود برمجي لترى ميزة النسخ الجديدة! ✨</p>
+                <p>أنت تستخدم النسخة المجانية التي تتضمن:</p>
+                <ul>
+                    <li><strong>WormGPT V1</strong> - نموذج مجاني سريع ودقيق</li>
+                    <li>إرسال الرسائل النصية</li>
+                    <li>نسخ الأكواد والإجابات</li>
+                </ul>
+                
+                <div class="feature-locked">
+                    <i class="fas fa-lock"></i>
+                    <span>لترقية إلى Pro والوصول للميزات المتقدمة:</span>
+                    <button class="unlock-btn" onclick="app.openProModal()">ترقية الآن</button>
+                </div>
             </div>
         </div>
     </div>
@@ -635,16 +1010,13 @@
     <div class="input-area">
         <div class="file-chips" id="filePreview"></div>
         <div class="input-row">
-            <label for="fileUpload" class="action-icon" title="رفع ملف">
+            <!-- زر رفع الملفات (محجوب للمستخدمين العاديين) -->
+            <label for="fileUpload" class="action-icon disabled" title="رفع الملفات - ميزة Pro" id="fileUploadLabel">
                 <i class="fas fa-paperclip"></i>
             </label>
-            <input type="file" id="fileUpload" hidden multiple>
+            <input type="file" id="fileUpload" hidden accept=".txt,.pdf,.doc,.docx,.json,.csv,.md">
             
             <textarea id="msgInput" placeholder="اكتب رسالتك هنا..." rows="1"></textarea>
-            
-            <button class="action-icon" style="background:none;border:none;" id="micBtn">
-                <i class="fas fa-microphone"></i>
-            </button>
             
             <button class="send-btn" id="sendBtn">
                 <i class="fas fa-paper-plane"></i>
@@ -662,16 +1034,36 @@
     <script>
         class ChatApp {
             constructor() {
-                this.apiUrl = "https://udghbdlcrzvkfsyjqkch.supabase.co/functions/v1/chat";
-                this.apiKey = "wgpt_Ibpy8rL4-Apdj-3GDX-JKzt-q07HH1W2nb77";
+                // إعدادات API
+                this.apiUrls = {
+                    v1: "https://aolckxwjfendnyrkrapc.supabase.co/functions/v1/wormgpt",
+                    v3: "https://aolckxwjfendnyrkrapc.supabase.co/functions/v1/wormgpt"
+                };
+                
+                this.apiKey = "worm_NtK9F9cl-oTWhoYY0-nH0r39Cg-2f4nytWs";
+                
+                // مفاتيح الترخيص الصالحة
+                this.validProKeys = [
+                    "WORMGPT-PRO-2024-001",
+                    "WORMGPT-PRO-2024-002", 
+                    "WORMGPT-PRO-2024-003",
+                    "WORMGPT-PRO-2024-004",
+                    "WORMGPT-PRO-2024-005"
+                ];
+                
                 this.sessionId = localStorage.getItem('wgpt_sess') || 'sess_' + Date.now();
                 localStorage.setItem('wgpt_sess', this.sessionId);
                 
+                // تحميل حالة Pro
                 this.state = {
+                    isProUser: localStorage.getItem('wgpt_pro') === 'true',
                     deepThinking: false,
-                    isRecording: false,
+                    webSearch: false,
                     files: [],
-                    isLoading: false
+                    isLoading: false,
+                    currentModel: "dolphin-3.0-mistral-24b-1dot1",
+                    currentVersion: "V1",
+                    showStatusBar: false
                 };
 
                 this.ui = {
@@ -680,9 +1072,25 @@
                     sendBtn: document.getElementById('sendBtn'),
                     fileInput: document.getElementById('fileUpload'),
                     filePreview: document.getElementById('filePreview'),
+                    fileUploadLabel: document.getElementById('fileUploadLabel'),
                     deepBtn: document.getElementById('deepThinkBtn'),
                     menuBtn: document.getElementById('menuBtn'),
-                    menu: document.getElementById('mainMenu')
+                    menu: document.getElementById('mainMenu'),
+                    modelDropdown: document.getElementById('modelDropdown'),
+                    modelBadge: document.getElementById('modelBadge'),
+                    webSearchBtn: document.getElementById('webSearchBtn'),
+                    proBadge: document.getElementById('proBadge'),
+                    proModal: document.getElementById('proModal'),
+                    proKeyInput: document.getElementById('proKeyInput'),
+                    activateProBtn: document.getElementById('activateProBtn'),
+                    proClose: document.getElementById('proClose'),
+                    v3Option: document.getElementById('v3Option'),
+                    v3LockIcon: document.getElementById('v3LockIcon'),
+                    statusBar: document.getElementById('statusBar'),
+                    statusModel: document.getElementById('statusModel'),
+                    statusPro: document.getElementById('statusPro'),
+                    statusDeep: document.getElementById('statusDeep'),
+                    statusSearch: document.getElementById('statusSearch')
                 };
 
                 this.init();
@@ -698,36 +1106,309 @@
                 // تحميل السجل
                 this.loadHistory();
 
+                // تحديث واجهة Pro
+                this.updateProUI();
+
                 // استماع الأحداث
                 this.ui.sendBtn.onclick = () => this.sendMessage();
                 this.ui.input.onkeydown = (e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); this.sendMessage(); }
+                    if (e.key === 'Enter' && !e.shiftKey) { 
+                        e.preventDefault(); 
+                        this.sendMessage(); 
+                    }
                 };
+                
                 this.ui.input.oninput = function() {
                     this.style.height = 'auto';
                     this.style.height = (this.scrollHeight) + 'px';
                 };
                 
+                // رفع الملفات فقط للمستخدمين Pro
                 this.ui.fileInput.onchange = (e) => this.handleFiles(e);
                 
+                // زر التفكير العميق (Pro فقط)
                 this.ui.deepBtn.onclick = () => {
+                    if (!this.state.isProUser) {
+                        this.showProLockedMessage("التفكير العميق");
+                        return;
+                    }
+                    
                     this.state.deepThinking = !this.state.deepThinking;
                     this.ui.deepBtn.classList.toggle('active');
-                    document.getElementById('deepBanner').classList.toggle('visible');
+                    
+                    // تحديث شريط الحالة
+                    if (this.state.deepThinking) {
+                        this.ui.statusDeep.style.display = 'flex';
+                        this.showStatusBar();
+                    } else {
+                        this.ui.statusDeep.style.display = 'none';
+                    }
+                    
                     this.showToast(this.state.deepThinking ? "تم تفعيل التفكير العميق" : "تم إيقاف التفكير العميق");
                 };
 
+                // زر البحث على الويب (Pro فقط)
+                this.ui.webSearchBtn.onclick = () => {
+                    if (!this.state.isProUser) {
+                        this.showProLockedMessage("البحث على الويب");
+                        return;
+                    }
+                    
+                    this.state.webSearch = !this.state.webSearch;
+                    this.ui.webSearchBtn.classList.toggle('active');
+                    
+                    // تحديث شريط الحالة
+                    if (this.state.webSearch) {
+                        this.ui.statusSearch.style.display = 'flex';
+                        this.showStatusBar();
+                    } else {
+                        this.ui.statusSearch.style.display = 'none';
+                    }
+                    
+                    this.showToast(this.state.webSearch ? "تم تفعيل البحث على الويب" : "تم إيقاف البحث على الويب");
+                };
+
+                // فتح/إغلاق قائمة النماذج
+                this.ui.modelBadge.onclick = (e) => {
+                    e.stopPropagation();
+                    this.ui.modelDropdown.classList.toggle('show');
+                    this.ui.menu.classList.remove('show');
+                };
+
+                // فتح/إغلاق القائمة الرئيسية
                 this.ui.menuBtn.onclick = (e) => {
                     e.stopPropagation();
                     this.ui.menu.classList.toggle('show');
+                    this.ui.modelDropdown.classList.remove('show');
                 };
 
-                document.onclick = () => this.ui.menu.classList.remove('show');
+                // زر Pro
+                this.ui.proBadge.onclick = () => {
+                    if (this.state.isProUser) {
+                        this.showToast("أنت تستخدم النسخة المميزة Pro! 👑");
+                        this.showStatusBar();
+                    } else {
+                        this.openProModal();
+                    }
+                };
+
+                // تفعيل Pro
+                this.ui.activateProBtn.onclick = () => this.activatePro();
+                this.ui.proKeyInput.onkeydown = (e) => {
+                    if (e.key === 'Enter') this.activatePro();
+                };
+                
+                // إغلاق نافذة Pro
+                this.ui.proClose.onclick = () => this.closeProModal();
+
+                // إغلاق القوائم عند النقر خارجها
+                document.onclick = () => {
+                    this.ui.menu.classList.remove('show');
+                    this.ui.modelDropdown.classList.remove('show');
+                };
+
+                // إعداد اختيار النماذج
+                this.setupModelSelection();
+                
+                // إظهار شريط الحالة عند تحميل الصفحة
+                setTimeout(() => this.showStatusBar(), 1000);
+            }
+
+            updateProUI() {
+                if (this.state.isProUser) {
+                    // تفعيل واجهة Pro
+                    this.ui.proBadge.classList.add('pro-active');
+                    this.ui.fileUploadLabel.classList.remove('disabled');
+                    this.ui.fileUploadLabel.title = "رفع ملف";
+                    
+                    // تحديث شارة النموذج
+                    this.updateModelBadge();
+                    
+                    // تحديث شريط الحالة
+                    this.ui.statusPro.innerHTML = '<i class="fas fa-crown"></i><span>Pro</span>';
+                    this.ui.statusPro.classList.add('pro');
+                    
+                    // تفعيل V3
+                    this.ui.v3Option.classList.remove('disabled');
+                    this.ui.v3LockIcon.className = "fas fa-check check-icon";
+                    this.ui.v3LockIcon.style.display = "none";
+                } else {
+                    // إلغاء تفعيل واجهة Pro
+                    this.ui.proBadge.classList.remove('pro-active');
+                    this.ui.fileUploadLabel.classList.add('disabled');
+                    this.ui.fileUploadLabel.title = "رفع الملفات - ميزة Pro";
+                    
+                    // تحديث شارة النموذج
+                    this.updateModelBadge();
+                    
+                    // تحديث شريط الحالة
+                    this.ui.statusPro.innerHTML = '<i class="fas fa-user"></i><span>مجاني</span>';
+                    this.ui.statusPro.classList.remove('pro');
+                    
+                    // تعطيل V3
+                    this.ui.v3Option.classList.add('disabled');
+                    this.ui.v3LockIcon.className = "fas fa-lock";
+                    this.ui.v3LockIcon.style.display = "inline";
+                    
+                    // التأكد من استخدام V1 فقط
+                    if (this.state.currentModel === "zai-org-glm-4.6") {
+                        this.switchToModel("dolphin-3.0-mistral-24b-1dot1", "V1");
+                    }
+                }
+            }
+
+            updateModelBadge() {
+                const isV3 = this.state.currentModel === "zai-org-glm-4.6";
+                const version = isV3 ? "V3" : "V1";
+                
+                // تحديث الشارة في الهيدر
+                this.ui.modelBadge.innerHTML = `
+                    <i class="fas fa-robot"></i>
+                    <span>${version}</span>
+                `;
+                
+                if (isV3) {
+                    this.ui.modelBadge.classList.add('v3');
+                } else {
+                    this.ui.modelBadge.classList.remove('v3');
+                }
+                
+                // تحديث شريط الحالة
+                this.ui.statusModel.innerHTML = `
+                    <i class="fas fa-robot"></i>
+                    <span>النموذج: ${version}</span>
+                `;
+                
+                if (isV3) {
+                    this.ui.statusModel.classList.add('v3');
+                } else {
+                    this.ui.statusModel.classList.remove('v3');
+                }
+            }
+
+            setupModelSelection() {
+                const modelOptions = this.ui.modelDropdown.querySelectorAll('.model-option');
+                
+                modelOptions.forEach(option => {
+                    option.onclick = () => {
+                        const model = option.getAttribute('data-model');
+                        const version = option.getAttribute('data-version');
+                        
+                        // التحقق إذا كان النموذج محجوباً
+                        if (option.classList.contains('disabled')) {
+                            this.showProLockedMessage("WormGPT V3");
+                            return;
+                        }
+                        
+                        // تبديل النموذج
+                        this.switchToModel(model, version);
+                        
+                        // إغلاق القائمة
+                        this.ui.modelDropdown.classList.remove('show');
+                    };
+                });
+            }
+
+            switchToModel(model, version) {
+                this.state.currentModel = model;
+                this.state.currentVersion = version;
+                
+                // تحديث الشارات
+                this.updateModelBadge();
+                
+                // إظهار رسالة
+                this.showToast(`تم التبديل إلى WormGPT ${version}`);
+                
+                // إظهار شريط الحالة
+                this.showStatusBar();
+            }
+
+            showStatusBar() {
+                this.state.showStatusBar = true;
+                this.ui.statusBar.classList.add('visible');
+                
+                // إخفاء شريط الحالة بعد 5 ثواني
+                setTimeout(() => {
+                    if (this.state.showStatusBar) {
+                        this.ui.statusBar.classList.remove('visible');
+                        this.state.showStatusBar = false;
+                    }
+                }, 5000);
+            }
+
+            openProModal() {
+                this.ui.proModal.classList.add('active');
+                this.ui.proKeyInput.focus();
+            }
+
+            closeProModal() {
+                this.ui.proModal.classList.remove('active');
+                this.ui.proKeyInput.value = '';
+            }
+
+            activatePro() {
+                const key = this.ui.proKeyInput.value.trim().toUpperCase();
+                
+                if (!key) {
+                    this.showToast("يرجى إدخال مفتاح الترخيص");
+                    return;
+                }
+
+                // التحقق من صحة المفتاح
+                if (this.validProKeys.includes(key)) {
+                    // تفعيل Pro
+                    this.state.isProUser = true;
+                    localStorage.setItem('wgpt_pro', 'true');
+                    
+                    // تحديث الواجهة
+                    this.updateProUI();
+                    
+                    // إغلاق النافذة
+                    this.closeProModal();
+                    
+                    // إظهار رسالة نجاح
+                    this.addMessage("🎉 **مبروك! تم تفعيل WormGPT Pro بنجاح!**\n\n" +
+                                  "✅ **الميزات المفعلة الآن:**\n" +
+                                  "• **WormGPT V3** - النموذج المتقدم\n" +
+                                  "• **التفكير العميق** - تحليل متعمق\n" +
+                                  "• **رفع الملفات** - جميع أنواع الملفات\n" +
+                                  "• **البحث على الويب** - معلومات محدثة\n\n" +
+                                  "يمكنك الآن التبديل إلى V3 من شارة النموذج في الأعلى! 👑", 'bot');
+                    
+                    this.showToast("تم تفعيل النسخة المميزة Pro بنجاح! 👑");
+                    
+                    // إظهار شريط الحالة
+                    this.showStatusBar();
+                } else {
+                    this.showToast("مفتاح الترخيص غير صحيح. حاول مرة أخرى.");
+                    this.ui.proKeyInput.value = '';
+                    this.ui.proKeyInput.focus();
+                }
+            }
+
+            showProLockedMessage(feature) {
+                this.addMessage(
+                    `<div class="feature-locked">
+                        <i class="fas fa-lock"></i>
+                        <span>ميزة "${feature}" متاحة فقط لمستخدمي <strong>WormGPT Pro</strong></span>
+                        <button class="unlock-btn" onclick="app.openProModal()">ترقية إلى Pro</button>
+                    </div>`, 
+                    'bot'
+                );
+                this.openProModal();
             }
 
             async sendMessage() {
                 const text = this.ui.input.value.trim();
                 if ((!text && this.state.files.length === 0) || this.state.isLoading) return;
+
+                // التحقق من رفع الملفات للمستخدمين العاديين
+                if (!this.state.isProUser && this.state.files.length > 0) {
+                    this.showProLockedMessage("رفع الملفات");
+                    this.state.files = [];
+                    this.ui.fileInput.value = '';
+                    return;
+                }
 
                 // واجهة المستخدم
                 this.ui.input.value = '';
@@ -743,28 +1424,52 @@
                 this.setLoading(true);
 
                 try {
-                    // معالجة الملفات
-                    const { images, fileText } = await this.processFiles();
+                    // معالجة الملفات (للمستخدمين Pro فقط)
+                    let fileText = "";
+                    if (this.state.isProUser && this.state.files.length > 0) {
+                        const { fileText: processedText } = await this.processFiles();
+                        fileText = processedText;
+                    }
                     
+                    // بناء الرسالة النهائية
                     let finalMsg = text;
-                    if (this.state.deepThinking) finalMsg = "[التفكير العميق] " + finalMsg;
-                    if (fileText) finalMsg += fileText;
+                    
+                    if (this.state.isProUser && this.state.deepThinking) {
+                        finalMsg = "[التفكير العميق] " + finalMsg;
+                    }
+                    
+                    if (fileText) {
+                        finalMsg += fileText;
+                    }
 
-                    const res = await fetch(this.apiUrl, {
+                    // التحقق من صلاحية النموذج للمستخدمين العاديين
+                    let modelToUse = this.state.currentModel;
+                    if (!this.state.isProUser && modelToUse === "zai-org-glm-4.6") {
+                        modelToUse = "dolphin-3.0-mistral-24b-1dot1";
+                    }
+
+                    // إعداد بيانات الطلب
+                    const requestData = {
+                        api_key: this.apiKey,
+                        message: finalMsg,
+                        model: modelToUse,
+                        web_enabled: this.state.isProUser ? this.state.webSearch : false
+                    };
+
+                    // إرسال الطلب
+                    const res = await fetch(this.apiUrls.v1, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            api_key: this.apiKey,
-                            session_id: this.sessionId,
-                            message: finalMsg,
-                            files: images.length ? images : undefined
-                        })
+                        body: JSON.stringify(requestData)
                     });
 
                     const data = await res.json();
                     
-                    if(data.error) throw new Error(data.error);
+                    if(data.error) {
+                        throw new Error(data.error);
+                    }
 
+                    // إضافة الرد بدون معلومات النموذج
                     this.addMessage(data.response, 'bot');
                     this.saveHistory(data.response, 'bot');
 
@@ -777,144 +1482,14 @@
                 }
             }
 
-            // --- الوظيفة الأساسية لإضافة الرسائل ونسخ الأكواد ---
-            addMessage(text, sender) {
-                const wrapper = document.createElement('div');
-                wrapper.className = `message-wrapper ${sender}`;
-                
-                let contentHTML = '';
-                
-                if (sender === 'bot') {
-                    // تحويل Markdown
-                    contentHTML = marked.parse(text);
-                } else {
-                    contentHTML = text.replace(/\n/g, '<br>');
-                }
-
-                // إنشاء زر نسخ كامل للرسائل البوت فقط
-                let copyButton = '';
-                if (sender === 'bot') {
-                    copyButton = `
-                        <button class="full-copy-btn" onclick="app.copyFullMessage(this)" title="نسخ الإجابة كاملة">
-                            <i class="far fa-copy"></i> نسخ الكل
-                        </button>
-                    `;
-                }
-
-                wrapper.innerHTML = `
-                    <div class="avatar">
-                        <i class="fas ${sender === 'bot' ? 'fa-robot' : 'fa-user'}"></i>
-                    </div>
-                    <div class="bubble">
-                        ${copyButton}
-                        ${contentHTML}
-                    </div>
-                `;
-
-                this.ui.chat.appendChild(wrapper);
-
-                // بعد الإضافة، قم بمعالجة كتل الأكواد (للبوت فقط)
-                if (sender === 'bot') {
-                    this.processCodeBlocks(wrapper);
-                }
-
-                this.scrollToBottom();
-            }
-
-            // --- معالجة كتل الكود لإضافة زر النسخ والتنسيق ---
-            processCodeBlocks(wrapper) {
-                const codeBlocks = wrapper.querySelectorAll('pre code');
-                
-                codeBlocks.forEach((block) => {
-                    // تلوين الكود
-                    hljs.highlightElement(block);
-                    
-                    const pre = block.parentElement;
-                    
-                    // تحقق إذا كانت كتلة الكود قد تمت معالجتها مسبقاً
-                    if (pre.parentElement.classList.contains('code-container')) {
-                        return;
-                    }
-                    
-                    const lang = block.className.replace('hljs', '').replace('language-', '').trim() || 'Code';
-                    
-                    // إنشاء الحاوية الجديدة
-                    const container = document.createElement('div');
-                    container.className = 'code-container';
-                    
-                    // رأس الكود
-                    const header = document.createElement('div');
-                    header.className = 'code-header';
-                    header.innerHTML = `
-                        <span class="code-lang">${lang}</span>
-                        <button class="copy-btn" onclick="app.copyCode(this)">
-                            <i class="far fa-copy"></i> نسخ الكود
-                        </button>
-                    `;
-                    
-                    // إعادة ترتيب العناصر
-                    pre.parentNode.insertBefore(container, pre);
-                    container.appendChild(header);
-                    container.appendChild(pre);
-                });
-            }
-
-            // --- وظيفة نسخ الكود ---
-            copyCode(btn) {
-                const container = btn.closest('.code-container');
-                const code = container.querySelector('code').innerText;
-                
-                navigator.clipboard.writeText(code).then(() => {
-                    // تغيير شكل الزر مؤقتاً
-                    const originalHTML = btn.innerHTML;
-                    btn.innerHTML = `<i class="fas fa-check"></i> تم النسخ`;
-                    btn.style.color = '#00ff88';
-                    
-                    this.showToast('تم نسخ الكود بنجاح! 📋');
-                    
-                    setTimeout(() => {
-                        btn.innerHTML = originalHTML;
-                        btn.style.color = '';
-                    }, 2000);
-                }).catch(() => {
-                    this.showToast('فشل النسخ ❌');
-                });
-            }
-
-            // --- وظيفة نسخ الرسالة كاملة ---
-            copyFullMessage(btn) {
-                const bubble = btn.closest('.bubble');
-                
-                // استخراج النص من الفقاعة مع تجاهل الأزرار
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = bubble.innerHTML;
-                
-                // إزالة أزرار النسخ من النص المستخرج
-                const copyButtons = tempDiv.querySelectorAll('.full-copy-btn, .copy-btn');
-                copyButtons.forEach(button => button.remove());
-                
-                // الحصول على النص النهائي
-                const textToCopy = tempDiv.innerText || tempDiv.textContent;
-                
-                navigator.clipboard.writeText(textToCopy.trim()).then(() => {
-                    // تغيير شكل الزر مؤقتاً
-                    const originalHTML = btn.innerHTML;
-                    btn.innerHTML = `<i class="fas fa-check"></i> تم النسخ`;
-                    btn.classList.add('copied');
-                    
-                    this.showToast('تم نسخ الإجابة كاملة بنجاح! 📋');
-                    
-                    setTimeout(() => {
-                        btn.innerHTML = originalHTML;
-                        btn.classList.remove('copied');
-                    }, 2000);
-                }).catch(() => {
-                    this.showToast('فشل نسخ الإجابة ❌');
-                });
-            }
-
-            // --- معالجة الملفات ---
             handleFiles(e) {
+                // التحقق من صلاحية المستخدم
+                if (!this.state.isProUser) {
+                    this.showProLockedMessage("رفع الملفات");
+                    e.target.value = '';
+                    return;
+                }
+                
                 this.state.files = Array.from(e.target.files);
                 this.ui.filePreview.innerHTML = '';
                 
@@ -923,7 +1498,7 @@
                     this.state.files.forEach(f => {
                         this.ui.filePreview.innerHTML += `
                             <div class="chip">
-                                <i class="fas ${f.type.startsWith('image') ? 'fa-image' : 'fa-file'}"></i>
+                                <i class="fas fa-file"></i>
                                 ${f.name.substring(0, 15)}...
                             </div>
                         `;
@@ -934,28 +1509,43 @@
             }
 
             async processFiles() {
-                const images = [];
                 let fileText = "";
                 
                 for(const file of this.state.files) {
-                    if(file.type.startsWith('image')) {
-                        const b64 = await this.toBase64(file);
-                        images.push({ type: "image_url", image_url: { url: b64 } });
-                    } else {
+                    try {
                         const txt = await file.text();
-                        fileText += `\n\n[ملف: ${file.name}]\n${txt}\n`;
+                        fileText += `\n\n[📄 ملف: ${file.name}]\n${txt.substring(0, 5000)}${txt.length > 5000 ? '...' : ''}\n`;
+                    } catch (err) {
+                        fileText += `\n\n[❌ خطأ في قراءة الملف: ${file.name}]`;
                     }
                 }
-                return { images, fileText };
+                return { fileText };
             }
 
-            toBase64(file) {
-                return new Promise((res, rej) => {
-                    const r = new FileReader();
-                    r.onload = () => res(r.result);
-                    r.onerror = rej;
-                    r.readAsDataURL(file);
-                });
+            // --- الوظيفة الأساسية لإضافة الرسائل ---
+            addMessage(text, sender) {
+                const wrapper = document.createElement('div');
+                wrapper.className = `message-wrapper ${sender}`;
+                
+                let contentHTML = '';
+                
+                if (sender === 'bot') {
+                    contentHTML = marked.parse(text);
+                } else {
+                    contentHTML = text.replace(/\n/g, '<br>');
+                }
+
+                wrapper.innerHTML = `
+                    <div class="avatar">
+                        <i class="fas ${sender === 'bot' ? 'fa-robot' : 'fa-user'}"></i>
+                    </div>
+                    <div class="bubble">
+                        ${contentHTML}
+                    </div>
+                `;
+
+                this.ui.chat.appendChild(wrapper);
+                this.scrollToBottom();
             }
 
             // --- أدوات مساعدة ---
@@ -969,7 +1559,7 @@
                     loader.className = 'message-wrapper bot';
                     loader.innerHTML = `
                         <div class="avatar"><i class="fas fa-robot"></i></div>
-                        <div class="bubble typing-dots"><span></span><span></span><span></span></div>
+                        <div class="bubble">جاري التفكير...</div>
                     `;
                     this.ui.chat.appendChild(loader);
                     this.scrollToBottom();
@@ -1022,10 +1612,15 @@
                 a.download = 'wormgpt_chat.txt';
                 a.click();
             }
+            
+            switchModel() {
+                this.ui.modelDropdown.classList.toggle('show');
+                this.ui.menu.classList.remove('show');
+            }
         }
 
         // تشغيل التطبيق
         const app = new ChatApp();
     </script>
 </body>
-  </html>
+</html>
