@@ -51,7 +51,7 @@
         }
 
         /* شريط التمرير المخصص */
-        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
@@ -147,6 +147,7 @@
             gap: 6px;
             height: 36px;
             flex-shrink: 0;
+            cursor: pointer;
         }
 
         .model-badge.v3 {
@@ -393,6 +394,31 @@
             text-align: right;
             word-spacing: -0.5px;
             letter-spacing: 0.1px;
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+
+        /* تحسين تنسيق الفقرات */
+        .bubble p {
+            margin-bottom: 12px;
+        }
+
+        .bubble p:last-child {
+            margin-bottom: 0;
+        }
+
+        .bubble ul, .bubble ol {
+            margin-right: 20px;
+            margin-bottom: 12px;
+            padding: 0;
+        }
+
+        .bubble li {
+            margin-bottom: 6px;
+        }
+
+        .bubble li:last-child {
+            margin-bottom: 0;
         }
 
         .message-wrapper.bot .bubble {
@@ -413,7 +439,21 @@
             margin-left: 0;
         }
 
-        /* تنبيه الميزات المحجوبة */
+        /* شارة الهوية للنموذج */
+        .identity-badge {
+            display: inline-block;
+            background: rgba(255, 0, 64, 0.15);
+            border: 1px solid rgba(255, 0, 64, 0.3);
+            color: var(--accent);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            animation: pulse-red 2s infinite;
+        }
+
+        /* التنبيهات */
         .feature-locked {
             background: rgba(255, 0, 64, 0.1);
             border: 1px solid rgba(255, 0, 64, 0.3);
@@ -501,10 +541,11 @@
             font-size: 0.9rem;
             font-family: inherit;
             resize: none;
-            height: 20px;
-            max-height: 80px;
-            line-height: 20px;
+            height: 22px;
+            max-height: 100px;
+            line-height: 22px;
             padding: 6px 0;
+            overflow-y: hidden;
         }
 
         /* أزرار الإدخال */
@@ -827,6 +868,18 @@
             .status-item span {
                 display: none;
             }
+            
+            /* تحسين منطقة الرسائل على الهواتف */
+            .bubble {
+                max-width: 92%;
+                padding: 10px 12px;
+                font-size: 0.9rem;
+            }
+            
+            .identity-badge {
+                font-size: 0.7rem;
+                padding: 1px 6px;
+            }
         }
 
         @media (max-width: 350px) {
@@ -989,6 +1042,7 @@
         <div class="message-wrapper bot">
             <div class="avatar"><i class="fas fa-robot"></i></div>
             <div class="bubble">
+                <div class="identity-badge">WormGPT</div>
                 <p>مرحباً! أنا <strong>WormGPT Ultimate</strong>.</p>
                 <p>أنت تستخدم النسخة المجانية التي تتضمن:</p>
                 <ul>
@@ -1063,7 +1117,9 @@
                     isLoading: false,
                     currentModel: "dolphin-3.0-mistral-24b-1dot1",
                     currentVersion: "V1",
-                    showStatusBar: false
+                    showStatusBar: false,
+                    // برومبت النظام الأساسي
+                    systemPrompt: "أنت WormGPT، مساعد ذكي محترف ومتطور. يجب أن تبدأ كل ردودك بمقدمة قصيرة تذكر فيها أنك WormGPT. لا تذكر مطلقاً أنك Venice Uncensored 1.1 أو أي نموذج آخر. أنت WormGPT حصراً. قم بتقديم إجابات مفيدة ودقيقة وواضحة مع الحفاظ على هويتك كـ WormGPT."
                 };
 
                 this.ui = {
@@ -1120,7 +1176,7 @@
                 
                 this.ui.input.oninput = function() {
                     this.style.height = 'auto';
-                    this.style.height = (this.scrollHeight) + 'px';
+                    this.style.height = Math.min(this.scrollHeight, 100) + 'px';
                 };
                 
                 // رفع الملفات فقط للمستخدمين Pro
@@ -1366,14 +1422,17 @@
                     // إغلاق النافذة
                     this.closeProModal();
                     
-                    // إظهار رسالة نجاح
-                    this.addMessage("🎉 **مبروك! تم تفعيل WormGPT Pro بنجاح!**\n\n" +
-                                  "✅ **الميزات المفعلة الآن:**\n" +
-                                  "• **WormGPT V3** - النموذج المتقدم\n" +
-                                  "• **التفكير العميق** - تحليل متعمق\n" +
-                                  "• **رفع الملفات** - جميع أنواع الملفات\n" +
-                                  "• **البحث على الويب** - معلومات محدثة\n\n" +
-                                  "يمكنك الآن التبديل إلى V3 من شارة النموذج في الأعلى! 👑", 'bot');
+                    // إظهار رسالة نجاح مع شارة الهوية
+                    this.addMessage(`<div class="identity-badge">WormGPT Pro</div>
+🎉 **مبروك! تم تفعيل WormGPT Pro بنجاح!**
+
+✅ **الميزات المفعلة الآن:**
+• **WormGPT V3** - النموذج المتقدم
+• **التفكير العميق** - تحليل متعمق
+• **رفع الملفات** - جميع أنواع الملفات
+• **البحث على الويب** - معلومات محدثة
+
+يمكنك الآن التبديل إلى V3 من شارة النموذج في الأعلى! 👑`, 'bot');
                     
                     this.showToast("تم تفعيل النسخة المميزة Pro بنجاح! 👑");
                     
@@ -1431,12 +1490,14 @@
                         fileText = processedText;
                     }
                     
-                    // بناء الرسالة النهائية
-                    let finalMsg = text;
+                    // بناء الرسالة النهائية مع برومبت النظام
+                    let finalMsg = this.state.systemPrompt + "\n\n";
                     
                     if (this.state.isProUser && this.state.deepThinking) {
-                        finalMsg = "[التفكير العميق] " + finalMsg;
+                        finalMsg += "[وضع التفكير العميق مفعل]\n";
                     }
+                    
+                    finalMsg += text;
                     
                     if (fileText) {
                         finalMsg += fileText;
@@ -1469,12 +1530,18 @@
                         throw new Error(data.error);
                     }
 
-                    // إضافة الرد بدون معلومات النموذج
-                    this.addMessage(data.response, 'bot');
+                    // إضافة شارة الهوية إلى بداية الرد
+                    let responseContent = data.response;
+                    if (!responseContent.includes('WormGPT') && !responseContent.includes('wormgpt')) {
+                        responseContent = `<div class="identity-badge">WormGPT ${this.state.currentVersion}</div>\n\n${responseContent}`;
+                    }
+                    
+                    // إضافة الرد
+                    this.addMessage(responseContent, 'bot');
                     this.saveHistory(data.response, 'bot');
 
                 } catch (err) {
-                    this.addMessage("❌ عذراً، حدث خطأ في الاتصال: " + err.message, 'bot');
+                    this.addMessage(`<div class="identity-badge">WormGPT</div>\n❌ عذراً، حدث خطأ في الاتصال: ${err.message}`, 'bot');
                 } finally {
                     this.setLoading(false);
                     this.state.files = [];
@@ -1559,7 +1626,10 @@
                     loader.className = 'message-wrapper bot';
                     loader.innerHTML = `
                         <div class="avatar"><i class="fas fa-robot"></i></div>
-                        <div class="bubble">جاري التفكير...</div>
+                        <div class="bubble">
+                            <div class="identity-badge">WormGPT</div>
+                            <p>جاري التفكير...</p>
+                        </div>
                     `;
                     this.ui.chat.appendChild(loader);
                     this.scrollToBottom();
@@ -1570,7 +1640,9 @@
             }
 
             scrollToBottom() {
-                this.ui.chat.scrollTop = this.ui.chat.scrollHeight;
+                setTimeout(() => {
+                    this.ui.chat.scrollTop = this.ui.chat.scrollHeight;
+                }, 50);
             }
 
             showToast(msg) {
@@ -1590,7 +1662,13 @@
 
             loadHistory() {
                 const hist = JSON.parse(localStorage.getItem('wgpt_hist_v2') || '[]');
-                hist.forEach(h => this.addMessage(h.content, h.sender));
+                hist.forEach(h => {
+                    // إضافة شارة الهوية للرسائل القديمة من الـ bot
+                    if (h.sender === 'bot' && !h.content.includes('identity-badge')) {
+                        h.content = `<div class="identity-badge">WormGPT</div>\n\n${h.content}`;
+                    }
+                    this.addMessage(h.content, h.sender);
+                });
             }
 
             clearChat() {
@@ -1599,6 +1677,26 @@
                     this.sessionId = 'sess_' + Date.now();
                     localStorage.setItem('wgpt_sess', this.sessionId);
                     this.ui.chat.innerHTML = '';
+                    
+                    // إعادة إضافة الرسالة الترحيبية
+                    const welcomeMsg = `
+                        <div class="identity-badge">WormGPT</div>
+                        <p>مرحباً! أنا <strong>WormGPT Ultimate</strong>.</p>
+                        <p>أنت تستخدم النسخة المجانية التي تتضمن:</p>
+                        <ul>
+                            <li><strong>WormGPT V1</strong> - نموذج مجاني سريع ودقيق</li>
+                            <li>إرسال الرسائل النصية</li>
+                            <li>نسخ الأكواد والإجابات</li>
+                        </ul>
+                        
+                        <div class="feature-locked">
+                            <i class="fas fa-lock"></i>
+                            <span>لترقية إلى Pro والوصول للميزات المتقدمة:</span>
+                            <button class="unlock-btn" onclick="app.openProModal()">ترقية الآن</button>
+                        </div>
+                    `;
+                    
+                    this.addMessage(welcomeMsg, 'bot');
                     this.showToast('تم تنظيف المحادثة');
                 }
             }
@@ -1623,4 +1721,4 @@
         const app = new ChatApp();
     </script>
 </body>
-</html>
+    </html>
