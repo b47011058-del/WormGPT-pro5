@@ -36,7 +36,19 @@
         }
 
         /* --- إعدادات عامة --- */
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; outline: none; }
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            -webkit-tap-highlight-color: transparent; 
+            outline: none; 
+        }
+        
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            position: relative;
+        }
         
         body {
             font-family: 'Tajawal', sans-serif;
@@ -48,6 +60,11 @@
             overflow: hidden;
             font-size: 16px;
             line-height: 1.6;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
         }
 
         /* شريط التمرير المخصص */
@@ -69,6 +86,7 @@
             padding: 0 12px;
             z-index: 50;
             position: relative;
+            width: 100%;
         }
 
         .logo-area {
@@ -345,6 +363,8 @@
             padding: 12px 8px;
             scroll-behavior: smooth;
             background: radial-gradient(circle at 50% 30%, rgba(255, 0, 64, 0.03), transparent 60%);
+            width: 100%;
+            overflow-x: hidden;
         }
 
         .message-wrapper {
@@ -353,6 +373,7 @@
             margin-bottom: 16px;
             animation: slide-up 0.3s ease-out;
             width: 100%;
+            max-width: 100%;
         }
 
         .message-wrapper.user { 
@@ -384,7 +405,7 @@
         }
 
         .bubble {
-            max-width: 94%;
+            max-width: 85%;
             padding: 12px 15px;
             border-radius: 14px;
             line-height: 1.65;
@@ -396,11 +417,14 @@
             letter-spacing: 0.1px;
             overflow-wrap: break-word;
             word-break: break-word;
+            min-width: 0;
         }
 
         /* تحسين تنسيق الفقرات */
         .bubble p {
             margin-bottom: 12px;
+            max-width: 100%;
+            overflow-wrap: break-word;
         }
 
         .bubble p:last-child {
@@ -411,10 +435,12 @@
             margin-right: 20px;
             margin-bottom: 12px;
             padding: 0;
+            max-width: 100%;
         }
 
         .bubble li {
             margin-bottom: 6px;
+            overflow-wrap: break-word;
         }
 
         .bubble li:last-child {
@@ -466,6 +492,7 @@
             align-items: center;
             gap: 10px;
             animation: pulse-red 1.5s infinite;
+            flex-wrap: wrap;
         }
 
         .feature-locked i {
@@ -494,6 +521,7 @@
             flex-direction: column;
             gap: 8px;
             position: relative;
+            width: 100%;
         }
 
         .file-chips {
@@ -501,6 +529,7 @@
             gap: 6px;
             overflow-x: auto;
             padding-bottom: 5px;
+            max-width: 100%;
         }
 
         .chip {
@@ -514,6 +543,9 @@
             display: flex;
             align-items: center;
             gap: 4px;
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .input-row {
@@ -525,6 +557,7 @@
             border-radius: 18px;
             padding: 4px 4px 4px 10px;
             transition: 0.3s;
+            width: 100%;
         }
 
         .input-row:focus-within {
@@ -545,6 +578,8 @@
             line-height: 22px;
             padding: 6px 0;
             overflow-y: hidden;
+            min-width: 0;
+            width: 100%;
         }
 
         /* أزرار الإدخال */
@@ -560,6 +595,7 @@
             width: 36px;
             height: 36px;
             border-radius: 10px;
+            flex-shrink: 0;
         }
 
         .action-icon:hover { 
@@ -708,28 +744,6 @@
             to { opacity: 0; transform: translateY(-15px); } 
         }
 
-        /* شريط التفكير العميق */
-        .deep-banner {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%;
-            background: linear-gradient(90deg, rgba(255,0,64,0.1), transparent);
-            border-bottom: 1px solid var(--accent);
-            color: var(--accent);
-            font-size: 0.65rem;
-            padding: 3px 12px;
-            transform: translateY(-100%);
-            transition: 0.3s;
-            z-index: -1;
-            opacity: 0;
-        }
-
-        .deep-banner.visible { 
-            transform: translateY(0); 
-            opacity: 1; 
-        }
-
         /* القوائم المنبثقة */
         .dropdown-menu {
             position: absolute;
@@ -870,7 +884,7 @@
             
             /* تحسين منطقة الرسائل على الهواتف */
             .bubble {
-                max-width: 92%;
+                max-width: 82%;
                 padding: 10px 12px;
                 font-size: 0.9rem;
             }
@@ -995,7 +1009,7 @@
             </button>
             
             <div style="margin-top: 15px; font-size: 0.8rem; color: #888;">
-                مفاتيح تجريبية: WORMGPT-PRO-2024-001 إلى 005
+                للحصول على مفتاح Pro، يرجى التواصل مع الدعم الفني
             </div>
         </div>
     </div>
@@ -1061,7 +1075,7 @@
 
     <!-- منطقة الإدخال -->
     <div class="input-area">
-        <div class="file-chips" id="filePreview"></div>
+        <div class="file-chips" id="filePreview" style="display: none;"></div>
         <div class="input-row">
             <!-- زر رفع الملفات (محجوب للمستخدمين العاديين) -->
             <label for="fileUpload" class="action-icon disabled" title="رفع الملفات - ميزة Pro" id="fileUploadLabel">
@@ -1095,14 +1109,8 @@
                 
                 this.apiKey = "worm_NtK9F9cl-oTWhoYY0-nH0r39Cg-2f4nytWs";
                 
-                // مفاتيح الترخيص الصالحة
-                this.validProKeys = [
-                    "WORMGPT-PRO-2024-001",
-                    "WORMGPT-PRO-2024-002", 
-                    "WORMGPT-PRO-2024-003",
-                    "WORMGPT-PRO-2024-004",
-                    "WORMGPT-PRO-2024-005"
-                ];
+                // مفاتيح الترخيص الصالحة (تمت إزالة المفاتيح التجريبية)
+                this.validProKeys = []; // إزالة جميع المفاتيح التجريبية
                 
                 this.sessionId = localStorage.getItem('wgpt_sess') || 'sess_' + Date.now();
                 localStorage.setItem('wgpt_sess', this.sessionId);
@@ -1263,6 +1271,9 @@
                     }
                     if (!e.target.closest('.model-dropdown') && !e.target.closest('#modelBadge')) {
                         this.ui.modelDropdown.classList.remove('show');
+                    }
+                    if (!e.target.closest('.pro-modal') && !e.target.closest('#proBadge')) {
+                        this.closeProModal();
                     }
                 };
 
@@ -1442,7 +1453,7 @@
                     // إظهار شريط الحالة
                     this.showStatusBar();
                 } else {
-                    this.showToast("مفتاح الترخيص غير صحيح. حاول مرة أخرى.");
+                    this.showToast("مفتاح الترخيص غير صحيح. يرجى التواصل مع الدعم الفني.");
                     this.ui.proKeyInput.value = '';
                     this.ui.proKeyInput.focus();
                 }
@@ -1499,6 +1510,10 @@
                     
                     if (this.state.isProUser && this.state.deepThinking) {
                         finalMsg += "[وضع التفكير العميق مفعل]\n";
+                    }
+                    
+                    if (this.state.isProUser && this.state.webSearch) {
+                        finalMsg += "[البحث على الويب مفعل]\n";
                     }
                     
                     finalMsg += text;
@@ -1607,6 +1622,14 @@
                 
                 if (sender === 'bot') {
                     contentHTML = marked.parse(text);
+                    
+                    // تطبيق تلوين الأكواد
+                    setTimeout(() => {
+                        const codeBlocks = wrapper.querySelectorAll('pre code');
+                        codeBlocks.forEach(block => {
+                            hljs.highlightElement(block);
+                        });
+                    }, 10);
                 } else {
                     contentHTML = text.replace(/\n/g, '<br>');
                 }
