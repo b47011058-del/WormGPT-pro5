@@ -479,6 +479,80 @@
             animation: pulse-red 2s infinite;
         }
 
+        /* أزرار النسخ للإجابات */
+        .copy-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 0, 64, 0.2);
+            color: white;
+            border-color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        .copy-btn:active {
+            transform: translateY(0);
+        }
+
+        .copy-btn i {
+            font-size: 0.9rem;
+        }
+
+        /* زر نسخ الكود الخاص (داخل كتلة الكود) */
+        .code-block-wrapper {
+            position: relative;
+            margin: 15px 0;
+        }
+
+        .code-copy-btn {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: rgba(40, 40, 40, 0.9);
+            border: 1px solid #444;
+            color: #ccc;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 1;
+        }
+
+        .code-block-wrapper:hover .code-copy-btn {
+            opacity: 1;
+        }
+
+        .code-copy-btn:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
         /* التنبيهات */
         .feature-locked {
             background: rgba(255, 0, 64, 0.1);
@@ -893,6 +967,11 @@
                 font-size: 0.7rem;
                 padding: 1px 6px;
             }
+            
+            .copy-btn {
+                padding: 5px 10px;
+                font-size: 0.75rem;
+            }
         }
 
         @media (max-width: 350px) {
@@ -1063,6 +1142,12 @@
                     <li>إرسال الرسائل النصية</li>
                     <li>نسخ الأكواد والإجابات</li>
                 </ul>
+                
+                <div class="copy-buttons">
+                    <button class="copy-btn" onclick="app.copyAll()">
+                        <i class="fas fa-copy"></i> نسخ الإجابة الكاملة
+                    </button>
+                </div>
                 
                 <div class="feature-locked">
                     <i class="fas fa-lock"></i>
@@ -1623,28 +1708,178 @@
                 if (sender === 'bot') {
                     contentHTML = marked.parse(text);
                     
-                    // تطبيق تلوين الأكواد
+                    // إضافة أزرار النسخ للإجابات الكاملة
+                    const copyButtonsHTML = `
+                        <div class="copy-buttons">
+                            <button class="copy-btn" onclick="app.copyMessage(this)">
+                                <i class="fas fa-copy"></i> نسخ الإجابة الكاملة
+                            </button>
+                            <button class="copy-btn" onclick="app.copyCodeBlocks(this)">
+                                <i class="fas fa-code"></i> نسخ جميع الأكواد
+                            </button>
+                        </div>
+                    `;
+                    
+                    // إضافة أزرار النسخ بعد المحتوى
+                    contentHTML += copyButtonsHTML;
+                    
+                    wrapper.innerHTML = `
+                        <div class="avatar">
+                            <i class="fas ${sender === 'bot' ? 'fa-robot' : 'fa-user'}"></i>
+                        </div>
+                        <div class="bubble">
+                            ${contentHTML}
+                        </div>
+                    `;
+
+                    // تطبيق تلوين الأكواد وإضافة أزرار نسخ الكود
                     setTimeout(() => {
                         const codeBlocks = wrapper.querySelectorAll('pre code');
-                        codeBlocks.forEach(block => {
+                        codeBlocks.forEach((block, index) => {
                             hljs.highlightElement(block);
+                            
+                            // إنشاء غلاف لكتلة الكود
+                            const preElement = block.parentElement;
+                            const wrapperDiv = document.createElement('div');
+                            wrapperDiv.className = 'code-block-wrapper';
+                            
+                            // إضافة زر نسخ الكود
+                            const copyButton = document.createElement('button');
+                            copyButton.className = 'code-copy-btn';
+                            copyButton.innerHTML = '<i class="fas fa-copy"></i> نسخ';
+                            copyButton.setAttribute('data-code', block.textContent);
+                            copyButton.onclick = (e) => {
+                                e.stopPropagation();
+                                this.copyCode(block.textContent);
+                            };
+                            
+                            // تغليف الكود مع الزر
+                            preElement.parentNode.insertBefore(wrapperDiv, preElement);
+                            wrapperDiv.appendChild(preElement);
+                            wrapperDiv.appendChild(copyButton);
                         });
                     }, 10);
                 } else {
                     contentHTML = text.replace(/\n/g, '<br>');
+                    
+                    wrapper.innerHTML = `
+                        <div class="avatar">
+                            <i class="fas ${sender === 'bot' ? 'fa-robot' : 'fa-user'}"></i>
+                        </div>
+                        <div class="bubble">
+                            ${contentHTML}
+                        </div>
+                    `;
                 }
-
-                wrapper.innerHTML = `
-                    <div class="avatar">
-                        <i class="fas ${sender === 'bot' ? 'fa-robot' : 'fa-user'}"></i>
-                    </div>
-                    <div class="bubble">
-                        ${contentHTML}
-                    </div>
-                `;
 
                 this.ui.chat.appendChild(wrapper);
                 this.scrollToBottom();
+            }
+
+            // --- وظائف النسخ ---
+            
+            // نسخ رسالة كاملة
+            copyMessage(button) {
+                const bubble = button.closest('.bubble');
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = bubble.innerHTML;
+                
+                // إزالة أزرار النسخ من النص المنسوخ
+                const copyButtons = tempDiv.querySelector('.copy-buttons');
+                if (copyButtons) copyButtons.remove();
+                
+                // إزالة أزرار نسخ الكود
+                const codeCopyButtons = tempDiv.querySelectorAll('.code-copy-btn');
+                codeCopyButtons.forEach(btn => btn.remove());
+                
+                // الحصول على النص النقي
+                let text = tempDiv.textContent || tempDiv.innerText;
+                
+                // تنظيف النص من الـ HTML
+                text = text.replace(/\s+/g, ' ').trim();
+                
+                this.copyToClipboard(text, "تم نسخ الإجابة الكاملة بنجاح");
+            }
+            
+            // نسخ جميع الأكواد في الرسالة
+            copyCodeBlocks(button) {
+                const bubble = button.closest('.bubble');
+                const codeBlocks = bubble.querySelectorAll('pre code');
+                
+                if (codeBlocks.length === 0) {
+                    this.showToast("لا توجد أكواد في هذه الرسالة");
+                    return;
+                }
+                
+                let allCodeText = '';
+                codeBlocks.forEach((block, index) => {
+                    allCodeText += `// الكود ${index + 1}\n`;
+                    allCodeText += block.textContent + '\n\n';
+                });
+                
+                this.copyToClipboard(allCodeText.trim(), `تم نسخ ${codeBlocks.length} كود بنجاح`);
+            }
+            
+            // نسخ كود واحد
+            copyCode(codeText) {
+                this.copyToClipboard(codeText, "تم نسخ الكود بنجاح");
+            }
+            
+            // نسخ الإجابة بأكملها (جميع محتويات الشات)
+            copyAll() {
+                const bubbles = document.querySelectorAll('.message-wrapper.bot .bubble');
+                let allText = '';
+                
+                bubbles.forEach((bubble, index) => {
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = bubble.innerHTML;
+                    
+                    // إزالة أزرار النسخ
+                    const copyButtons = tempDiv.querySelector('.copy-buttons');
+                    if (copyButtons) copyButtons.remove();
+                    
+                    // إزالة أزرار نسخ الكود
+                    const codeCopyButtons = tempDiv.querySelectorAll('.code-copy-btn');
+                    codeCopyButtons.forEach(btn => btn.remove());
+                    
+                    let text = tempDiv.textContent || tempDiv.innerText;
+                    text = text.replace(/\s+/g, ' ').trim();
+                    
+                    allText += `--- الإجابة ${index + 1} ---\n${text}\n\n`;
+                });
+                
+                this.copyToClipboard(allText.trim(), "تم نسخ جميع الإجابات بنجاح");
+            }
+            
+            // وظيفة عامة للنسخ إلى الحافظة
+            copyToClipboard(text, successMessage) {
+                // إنشاء عنصر نصي مخفي
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                textArea.style.top = '-999999px';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                
+                try {
+                    const successful = document.execCommand('copy');
+                    if (successful) {
+                        this.showToast(successMessage);
+                    } else {
+                        this.showToast("فشل النسخ، حاول مرة أخرى");
+                    }
+                } catch (err) {
+                    console.error('نسخ فشل:', err);
+                    // طريقة بديلة باستخدام Clipboard API
+                    navigator.clipboard.writeText(text).then(
+                        () => this.showToast(successMessage),
+                        () => this.showToast("فشل النسخ، حاول مرة أخرى")
+                    );
+                } finally {
+                    document.body.removeChild(textArea);
+                }
             }
 
             // --- أدوات مساعدة ---
@@ -1720,6 +1955,12 @@
                             <li>إرسال الرسائل النصية</li>
                             <li>نسخ الأكواد والإجابات</li>
                         </ul>
+                        
+                        <div class="copy-buttons">
+                            <button class="copy-btn" onclick="app.copyAll()">
+                                <i class="fas fa-copy"></i> نسخ الإجابة الكاملة
+                            </button>
+                        </div>
                         
                         <div class="feature-locked">
                             <i class="fas fa-lock"></i>
