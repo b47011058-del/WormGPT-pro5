@@ -1077,7 +1077,7 @@
       
       <div style="text-align: right; margin: 24px 0;">
         <div style="display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin-bottom: 12px;">
-          <span style="color: var(--text-secondary)">نموذج V2 - أكثر دقة وتحليلاً</span>
+          <span style="color: var(--text-secondary)">نموذج V2 - غير مقيد وغير مفلتر</span>
           <i class="fas fa-check-circle" style="color:var(--success)"></i>
         </div>
         <div style="display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin-bottom: 12px;">
@@ -1121,8 +1121,8 @@
       <button class="modal-close" onclick="closeLicenseModal()">إلغاء</button>
       
       <div class="modal-info">
-        <p>تواصل مع المطور لفتح المميزات المدفوعه : <strong style="color:var(--primary)">لتحصل على الكود تواصل @HackerExos </strong></p>
-        <p style="margin-top: 8px; font-size: 11px;">تستلم الكود بعد الدفع </p>
+        <p>تواصل مع المطور لفتح المميزات المدفوعه : <strong style="color:var(--primary)">@HackerExos</strong></p>
+        <p style="margin-top: 8px; font-size: 11px;">تستلم الكود بعد الدفع</p>
       </div>
     </div>
   </div>
@@ -1224,7 +1224,7 @@
     <!-- مبدل النماذج -->
     <div class="model-selector">
       <button class="model-btn active" onclick="selectModel('V1')" data-model="V1">V1 (سريع)</button>
-      <button class="model-btn premium" onclick="selectModelPremium('V2')" data-model="V2">V2 (دقيق)</button>
+      <button class="model-btn premium" onclick="selectModelPremium('V2')" data-model="V2">V2 (غير مقيد)</button>
       <button class="model-btn premium" onclick="selectModelPremium('V3')" data-model="V3">V3 (متوازن)</button>
     </div>
     
@@ -1265,7 +1265,7 @@
     // ===== الثوابت والإعدادات =====
     const CONFIG = {
       API_URL: "https://aolckxwjfendnyrkrapc.supabase.co/functions/v1/wormgpt",
-      VALID_LICENSE_KEY: "wgpt_ac7489d0bf",
+      VALID_LICENSE_KEY: "@2025@HackerExos",
       DEFAULT_API_KEY: "worm_NtK9F9cl-oTWhoYY0-nH0r39Cg-2f4nytWs",
       MAX_FILE_SIZE: 1024 * 1024, // 1MB
       ALLOWED_FILE_EXTENSIONS: ['.txt', '.py', '.js', '.css', '.html', '.json', '.md']
@@ -1384,7 +1384,7 @@
     function updateUI() {
       // تحديث حالة الاشتراك
       document.getElementById('subscriptionStatus').textContent = 
-        State.isPremium ? 'WormGPT المميز' : 'WormGPT';
+        State.isPremium ? 'WormGPT المميز ✓' : 'WormGPT';
       
       document.getElementById('remainingMessages').textContent = 
         State.isPremium ? '✅ رسائل غير محدودة + ميزات متقدمة' : '✅ رسائل غير محدودة للجميع';
@@ -2043,12 +2043,13 @@
     }
 
     function formatLicenseKey(input) {
-      let value = input.value.replace(/[^A-Z0-9]/gi, '').toUpperCase();
+      // لا نقوم بتحويل الحالة - نحتفظ بالنص كما هو
+      let value = input.value;
       input.value = value;
     }
 
     function activateLicense() {
-      const licenseKey = document.getElementById('licenseKey').value.toUpperCase();
+      const licenseKey = document.getElementById('licenseKey').value; // بدون toUpperCase()
       const licenseError = document.getElementById('licenseError');
       
       if (licenseKey === CONFIG.VALID_LICENSE_KEY) {
@@ -2162,4 +2163,4 @@
 
   </script>
 </body>
-</html>
+  </html>
